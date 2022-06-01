@@ -1,0 +1,166 @@
+
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFiMulti.h>
+
+#include <WiFiClient.h>
+
+// defino credenciales red
+const char* ssid ="NombreRed";
+const char* password ="ClavedeRed";
+
+// reemplazar por las Variables para lectura del tcs230
+float t;
+float h;
+float f;
+float hif;
+float hic;
+
+#include "poner libreria del tcs230"
+
+#define DHTPIN 14     // Digital pin connected to the DHT sensor
+// Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
+// Pin 15 can work but DHT must be disconnected during program upload.
+
+// Uncomment whatever type you're using!
+#define DHTTYPE DHT11   // DHT 11
+//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+
+DHT dht(DHTPIN, DHTTYPE);
+WiFiClient client;
+
+
+const int s0 = D3;  
+
+const int s1 = D4;  
+
+const int s2 = D5;  
+
+const int s3 = D6;  
+
+const int out = D7;   
+
+int red = 0;  
+
+int green = 0;  
+
+int blue = 0; 
+
+
+int redcolor= 0;
+
+int greencolor= 0;
+
+int bluecolor= 0;
+
+int yellowcolor= 0;
+
+
+int color= 0;
+
+const int servo = D8;
+
+void setup()   
+
+{  
+
+  Serial.begin(9600); 
+
+  pinMode(s0, OUTPUT);  
+
+  pinMode(s1, OUTPUT);  
+
+  pinMode(s2, OUTPUT);  
+
+  pinMode(s3, OUTPUT);  
+
+  pinMode(out, INPUT); 
+
+  pinMode(servo, OUTPUT); 
+
+  digitalWrite(s0, HIGH);  
+
+  digitalWrite(s1, HIGH);  
+
+
+}  
+
+void loop() 
+
+{  
+
+
+  digitalWrite(s2, LOW);  
+
+  digitalWrite(s3, LOW);  
+
+  //count OUT, pRed, RED  
+
+  red = pulseIn(out, digitalRead(out) == HIGH ? LOW : HIGH);  
+
+  digitalWrite(s3, HIGH);  
+
+  //count OUT, pBLUE, BLUE  
+
+  blue = pulseIn(out, digitalRead(out) == HIGH ? LOW : HIGH);  
+
+  digitalWrite(s2, HIGH);  
+
+  //count OUT, pGreen, GREEN  
+
+  green = pulseIn(out, digitalRead(out) == HIGH ? LOW : HIGH); 
+
+  Serial.print("R Intensity:");  
+
+  Serial.print(red, DEC);  
+
+  Serial.print(" G Intensity: ");  
+
+  Serial.print(green, DEC);  
+
+  Serial.print(" B Intensity : ");  
+
+  Serial.print(blue, DEC);  
+
+  if(red < 60 && green <40 && blue > 43){
+
+    delay(250);
+
+    redcolor++;
+
+    Serial.print("Verde");
+
+    delay(50);
+
+    digitalWrite(servo, HIGH);
+
+    delay(2300);
+
+    digitalWrite(servo, LOW); 
+
+  }
+
+  if(red < 45 && green > 95 && blue > 80){
+
+    delay(250);
+
+    bluecolor++;
+
+    Serial.print("Naranja");
+
+   
+    delay(2000);
+
+   
+
+  }
+
+
+
+   
+
+   Serial.println();  
+
+ // delay(1000); 
+
+} 
